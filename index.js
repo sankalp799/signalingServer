@@ -1,4 +1,4 @@
-let SignalServer = {};
+const cors = require('cors');
 const express = require('express')
 let app = express();
 const httpServer = require('http').createServer(app);
@@ -8,6 +8,15 @@ const io = require('socket.io')(httpServer, {
         methods: ["GET", "POST"]
     }
 });
+
+app.use(cors({
+    origin: "*",
+}));
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.status(200).send('welcome to dashoff signaling server');
+})
 
 io.sockets.on("connection", socket => {
     console.log(`[SOCKET_CONNECTION] SOCKET CONNECTED WITH ID: ${socket.id}`);
@@ -60,7 +69,7 @@ io.sockets.on("connection", socket => {
 
 
 function init() {
-    httpServer.listen(3000, err => !err ? console.log('listening...', '\n', '[SOCKET] WEB_RTC_SIGNALING SERVICE READY AND LAUNCHED ON PORT 3000') : console.error(err));
+    httpServer.listen(process.env.PORT || 3000, err => !err ? console.log('listening...', '\n', '[SOCKET] WEB_RTC_SIGNALING SERVICE READY AND LAUNCHED ON PORT 3000') : console.error(err));
 }
 
 module.exports = init;
