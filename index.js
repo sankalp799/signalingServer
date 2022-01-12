@@ -72,4 +72,4 @@ function init() {
     httpServer.listen(process.env.PORT || 3000, err => !err ? console.log('listening...', '\n', '[SOCKET] WEB_RTC_SIGNALING SERVICE READY AND LAUNCHED ON PORT 3000') : console.error(err));
 }
 
-module.exports = init;
+init();
