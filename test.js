@@ -1,4 +1,9 @@
 require('dotenv').config();
+const ys = require('ytdl-core');
+const yURL = 'https://www.youtube.com/watch?v=-xKM3mGt2pE';
+/**************
+***********
+***********
 const axios = require('axios');
 let _f = {};
 
@@ -26,11 +31,15 @@ _f.getY_url = async (name, cb) => {
     }
 }
 
+*/
+
 /****
 _f.getY_url('take on me', (url) => {
     console.log(url);
 });
 */
+
+/**************
 
     let m_name='take_on_me';
     let y_fetch_url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${m_name}&type=video&videoType=any&key=${process.env.YOUTUBE_API_KEY}`;
@@ -53,3 +62,8 @@ _f.getY_url('take on me', (url) => {
             // console.log('freddy> error: ', e);
             throw e;
         })
+************/
+
+ys.getInfo(yURL)
+	.then(data => console.log(data.formats[data.formats.length-1]))
+	.catch(e => console.error(e));

@@ -1,5 +1,6 @@
-const init(data, cb) => {
-    let time = data[1].toString().trim();
+const init = (data, cb) => {
+    const { flags, line } = data;
+    let time = line[1].toString().trim();
     let error = time.indexOf(':') > 0 ? false : true;
     if(!error){
         let t = time.split(':');

@@ -31,7 +31,7 @@ freddy._process = (line, cb) => {
     freddy._fetch_cmd(line[0], (exist) => {
         
         if(exist){
-            if(flags.length > 0){
+            if((flags.find(f => f.toLowerCase() == '--help')) !== undefined){
                 let help_path = cmd_path + `${line[0]}/help.js`; 
                 const _helper = require(help_path);
                 if(typeof(_helper) == 'function'){
