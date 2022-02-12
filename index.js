@@ -61,19 +61,19 @@ io.sockets.on("connection", socket => {
             console.log(`[SOCKET_BROADCASTER] Passing RTC:Candidate From: ${socket.id} To: ${data.to}`);
             console.log(`[WET_RTC:ICE] ${socket.id} RTC:Peer:Candidate Sharing... `);
         })
-        
+
         socket.on('rtc:re-negotiate-media', (rid) => {
-        	io.to(rid).emit('rtc:re-negotiate-req', socket.id);
+            socket.to(rid).emit('rtc:re-negotiate-req', socket.id);
         })
-        
-        socket.on('rtc:re-negotiate-media-offer', data => {
-        	io.to(data.to).emit('rtc:re-negotiate-media-offer', socket.id, data.sdp, data.username);
-            console.log(`[SOCKET_BROADCASTER] RTCPeerConnection Re-Negotiate-Media-Offer by id: ${socket.id} with USERNAME: ${data.username}`);
-            console.log(`[RTC] ${socket.id} offering Nego-Media to: ${data.to}`);
+
+        socket.on('rtc:re-negotiate-media-offer', ({ to, username, sdp }) => {
+            io.to(to).emit('rtc:re-negotiate-media-offer', socket.id, sdp, username);
+            console.log(`[SOCKET_BROADCASTER] RTCPeerConnection Re-Negotiate-Media-Offer by id: ${socket.id} with USERNAME: ${username}`);
+            console.log(`[RTC] ${socket.id} offering Nego-Media to: ${to}`);
         })
-        
+
         socket.on('rtc:re-negotiate-media-answer', data => {
-        	io.to(data.to).emit('rtc:re-negotiate-media-answer', socket.id, data.sdp);
+            io.to(data.to).emit('rtc:re-negotiate-media-answer', socket.id, data.sdp);
             console.log(`[SOCKET_BROADCASTER] RTCPeerConnection Answer by id: ${socket.id} with USERNAME: ${data.username}`);
             console.log(`[RTC] ${socket.id} Answer's the call`);
         })
@@ -108,7 +108,7 @@ io.sockets.on("connection", socket => {
 
         socket.on('freddy:music:all_set', (rid) => {
             rooms[rid].add(socket.id);
-            if(rooms[rid].size >= io.sockets.adapter.rooms.get(rid).size){
+            if (rooms[rid].size >= io.sockets.adapter.rooms.get(rid).size) {
                 io.to(rid).emit('freddy:music:play', true);
             }
         });
@@ -117,11 +117,13 @@ io.sockets.on("connection", socket => {
             rooms[payload.rid] = new Set();
             freddy._input(payload, (data, _evt, _s) => {
                 console.log(data, _evt, _s);
-                switch(_s){
-                    case true: io.to(payload.rid).emit(_evt, data);
+                switch (_s) {
+                    case true:
+                        io.to(payload.rid).emit(_evt, data);
                         break;
-                    
-                    case false: io.to(socket.id).emit(_evt, data);
+
+                    case false:
+                        io.to(socket.id).emit(_evt, data);
                         break;
                 }
             });
