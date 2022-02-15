@@ -80,7 +80,7 @@ io.sockets.on("connection", socket => {
 
         socket.on('leave', (room) => {
             io.to(room).emit('user:left', socket.id);
-            console.log(`[SOCKET] ${id} LEFT`);
+            console.log(`[SOCKET] ${socket.id} LEFT`);
             console.log(`[RTC_CONN] RTC:PEER:CONNECTION TERMINATED BY ${socket.id}`)
         })
 
