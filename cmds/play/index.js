@@ -61,7 +61,7 @@ _f.call_ytdl = (data, cb) => {
     try{
         _f.getFormat(y_url, (v_format) => {
             if(v_format){
-                data['url'] = v_format.url;
+                data['url'] = `/music/${data.id}` || v_format.url;
                 data['codecs'] = v_format.codecs;
                 data['type'] = v_format.container;
                 data['sampleRate'] = v_format.audioSampleRate;

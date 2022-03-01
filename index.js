@@ -1,6 +1,7 @@
 const cors = require('cors');
 const ytdl = require('ytdl-core');
 const express = require('express')
+const request = require('request')
 let app = express();
 require('dotenv').config();
 const httpServer = require('http').createServer(app);
@@ -19,6 +20,25 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/music/:id', (req, res) => {
+    try{
+        console.log('request_id> ', req.params.id)
+        const y_url = `https://www.youtube.com/watch?v=${req.params.id}`
+        ytdl.getInfo(y_url)
+            .then(data => {
+                let gurl = data.formats[data.formats.length-1].url;
+                req.pipe(request(gurl)).pipe(res);
+            })
+            .catch(e => {
+                console.error(e)
+                
+            });
+    }catch(e){
+        console.log('router_music> ', e.message);
+        res.status(404).send('not found');
+    }
+    
+})
 
 app.get('/', (req, res) => {
     res.status(200).send('welcome to dashoff signaling server');
