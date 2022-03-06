@@ -63,7 +63,10 @@ _f.getY_url('take on me', (url) => {
             throw e;
         })
 ************/
+
+/****** 
 console.log('request for: ', process.argv[2]);
 ys.getInfo(process.argv[2])
 	.then(data => console.log(data.formats[data.formats.length-1]))
 	.catch(e => console.error(e));
+*/

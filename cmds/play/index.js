@@ -47,6 +47,11 @@ _f.getFormat = (url, cb) => {
         });
 }
 
+_f.p = (data) => {
+    data['s_all'] = false;
+    return data;
+}
+
 _f.call_ytdl = (data, cb) => {
    /************************
     *
@@ -66,8 +71,12 @@ _f.call_ytdl = (data, cb) => {
                 data['type'] = v_format.container;
                 data['sampleRate'] = v_format.audioSampleRate;
                 data['channels'] = v_format.audioChannels;
+                data['s_all'] = true;
 
                 console.log('freddy> MUSIC_DATA: ', data);
+                // look out for flags 
+
+
                 cb(false, data);
             }else{
                 console.log('freddy> Error: failed to fetch youtube video format');
@@ -99,7 +108,18 @@ const init = ({flags, line}, cb) => {
             if(url){
                 _f.call_ytdl(url, (err, g_url_data) => {
                     if(!err && g_url_data){
-                        cb(g_url_data, 'freddy:music:data', true);
+                        // flags 
+                        flags.forEach(flag => {
+                            try{
+                                const f_fun = flag.replace('--', '');
+                                console.log(`play_flag> ${f_fun}`);
+                                g_url_data = typeof(_f[f_fun]) === 'function' ? _f[f_fun](g_url_data) : g_url_data;
+                                console.log(`play_flag_${f_fun} response> ${g_url_data}`);
+                            }catch(e){
+                                console.error(e);
+                            }
+                        })
+                        cb(g_url_data, 'freddy:music:data', g_url_data['s_all']);
                     }else{
                         cb({
                             error: `Sorry, Something went wrong please, try again`,

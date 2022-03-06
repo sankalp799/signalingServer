@@ -2,6 +2,7 @@ const cors = require('cors');
 const ytdl = require('ytdl-core');
 const express = require('express')
 const request = require('request')
+const memes = require('./data/meme-50.json')
 let app = express();
 require('dotenv').config();
 const httpServer = require('http').createServer(app);
@@ -21,23 +22,23 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/music/:id', (req, res) => {
-    try{
+    try {
         console.log('request_id> ', req.params.id)
         const y_url = `https://www.youtube.com/watch?v=${req.params.id}`
         ytdl.getInfo(y_url)
             .then(data => {
-                let gurl = data.formats[data.formats.length-1].url;
+                let gurl = data.formats[data.formats.length - 1].url;
                 req.pipe(request(gurl)).pipe(res);
             })
             .catch(e => {
                 console.error(e)
-                
+
             });
-    }catch(e){
+    } catch (e) {
         console.log('router_music> ', e.message);
         res.status(404).send('not found');
     }
-    
+
 })
 
 app.get('/', (req, res) => {
@@ -96,6 +97,15 @@ io.sockets.on("connection", socket => {
             io.to(data.to).emit('rtc:re-negotiate-media-answer', socket.id, data.sdp);
             console.log(`[SOCKET_BROADCASTER] RTCPeerConnection Answer by id: ${socket.id} with USERNAME: ${data.username}`);
             console.log(`[RTC] ${socket.id} Answer's the call`);
+        })
+
+        socket.on('freddy:meme:please', ({ rid, uname }) => {
+            const data = {
+                id: socket.id,
+                username: uname || null,
+                meme: memes.memes[Math.floor(Math.random() * memes.count)].url,
+            }
+            io.to(rid).emit('freddy:meme', data);
         })
 
         socket.on('leave', (room) => {
