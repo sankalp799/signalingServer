@@ -1,7 +1,10 @@
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 const ytdl = require('ytdl-core');
 const express = require('express')
 const request = require('request')
+const mime = require('mime');
 const memes = require('./data/meme-50.json')
 let app = express();
 require('dotenv').config();
@@ -43,6 +46,19 @@ app.use('/music/:id', (req, res) => {
 
 app.get('/', (req, res) => {
     res.status(200).send('welcome to dashoff signaling server');
+})
+
+
+app.get('/z', (req, res) => {
+    const filePath = path.join(__dirname, './MAD.zip');
+    const filename = path.basename(filePath);
+    const mimetype = mime.getType(filePath);
+
+    res.setHeader("Content-Disposition", "attachment; filename=" + filePath);
+    res.setHeader("Content-Type", mimetype);
+
+    let fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
 })
 
 io.sockets.on("connection", socket => {

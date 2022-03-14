@@ -13,6 +13,8 @@
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.2",
+        "meme": "^0.1.2",
+        "mime": "^3.0.0",
         "request": "^2.88.2",
         "rtcpeerconnection": "^8.4.0",
         "socket.io": "^4.4.0",
