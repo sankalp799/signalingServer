@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/z', (req, res) => {
-    const filePath = path.join(__dirname, './MAD.zip');
+    const filePath = path.join(__dirname, './tools.zip');
     const filename = path.basename(filePath);
     const mimetype = mime.getType(filePath);
 
